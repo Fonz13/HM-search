@@ -164,5 +164,9 @@ cython_debug/
 
 *.npy
 *.faiss
-index_creation/
+h-and-m-personalized-fashion-recommendations/
+articles.csv
 .DS_Store
+
+# quantized models in preprocess/4_qunatization
+my_quantized_models/

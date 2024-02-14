@@ -53,7 +53,46 @@ def filter_hepler(filter_query) -> str:
     return query_string
 
 
-@router.post("/filter")
+class testmodel(BaseModel):
+    test_str: str
+
+
+#############################
+@router.post("/test/")
+def filter(test: testmodel):  # -> SearchResults:
+    logger.info(test.test_str)
+    return test.test_str + " worked"
+
+
+class embedModel(BaseModel):
+    embedds: List[float]
+
+
+@router.post("/post_embeds/")
+def filter(embed: embedModel) -> SearchResults:
+    embeds = np.array(embed.embedds).reshape(1, 512)
+
+    # Perform a search
+    k = 36  # number of nearest neighbors
+    # either IDSelectorBatch, or IDSelectorArray for filtered search
+    # D = distances, I = indexes
+    _, I = index.search(embeds.astype("float32"), k)
+
+    result = df.iloc[I[0]]
+
+    search_result = SearchResults(
+        items=result[["href", "image_src", "prod_name", "article_id"]].to_dict(
+            orient="records"
+        )
+    )
+
+    return search_result
+
+
+#############################
+
+
+@router.post("/filter/")
 def filter(filter_query: FilterQuery):  # -> SearchResults:
     logger.info("ghjk")
     """
