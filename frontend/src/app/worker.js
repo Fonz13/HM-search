@@ -65,7 +65,22 @@ function EMBEDAPI(embeddngs) {
       embedds: Array.from(embeddngs.data),
     })
     .then((response) => {
-      console.log(response.data.items);
+      //console.log(response.data.items);
+      return response.data.items;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+function EMBEDIMAMGEAPI(embeddngs, images) {
+  return api
+    .post("/post_embeds_ims/", {
+      embedds: Array.from(embeddngs.data),
+      images: images,
+    })
+    .then((response) => {
+      //console.log(response.data.items);
       return response.data.items;
     })
     .catch((error) => {
@@ -94,7 +109,15 @@ self.addEventListener("message", async (event) => {
   // Compute embeddings
   const { text_embeds } = await text_model(text_inputs);
 
-  const output_api = await EMBEDAPI(text_embeds);
+  //const output_api = await EMBEDAPI(text_embeds);
+
+  // new
+  const images = event.data.selectedImages;
+  const text_query = event.data.text !== "" ? text_embeds : { data: [] };
+
+  console.log(images, "images");
+  console.log(text_query, "text_query");
+  const output_api = await EMBEDIMAMGEAPI(text_query, images);
 
   // Send the output back to the main thread
   self.postMessage({

@@ -30,10 +30,12 @@ export function Modal({ currentImage, setCurrentImage }) {
         <>
           <Image
             alt=""
-            className="transform rounded-lg transition will-change-auto"
-            style={{ transform: "translate3d(0, 0, 0)" }}
-            layout={"fill"}
-            objectFit={"contain"}
+            className="transform rounded-lg transition will-change-auto "
+            fill={true}
+            style={{
+              objectFit: "contain",
+              transform: "translate3d(0, 0, 0)",
+            }}
             src={photo_image_url}
             unoptimized={true}
           />

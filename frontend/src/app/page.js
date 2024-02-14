@@ -11,6 +11,7 @@ export default function Home() {
   const [ready, setReady] = useState(null);
   const [images, setImages] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
+  const [imageBucket, setImageBucket] = useState([]);
   //TODO
   /**
    * add application state with the id of selected images
@@ -51,22 +52,32 @@ export default function Home() {
       worker.current.removeEventListener("message", onMessageReceived);
   });
 
-  const search = useCallback((text) => {
+  const search = useCallback((text, selectedImages) => {
     if (worker.current) {
-      worker.current.postMessage({ text });
+      worker.current.postMessage({ text, selectedImages });
     }
   }, []);
 
   return (
     <main className="mx-auto max-w-[1960px] p-4 relative">
       <Modal currentImage={currentImage} setCurrentImage={setCurrentImage} />
-      <SearchBar search={search} />
+      <SearchBar
+        search={search}
+        imageBucket={imageBucket}
+        setImageBucket={setImageBucket}
+      />
       {ready === false && (
         <div className="z-10 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
           <div className="text-white text-2xl font-bold">Loading model...</div>
         </div>
       )}
-      <ImageGrid images={images} setCurrentImage={setCurrentImage} />
+      <ImageGrid
+        images={images}
+        setCurrentImage={setCurrentImage}
+        currentImage={currentImage}
+        setImageBucket={setImageBucket}
+        imageBucket={imageBucket}
+      />
     </main>
   );
 }

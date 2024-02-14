@@ -87,6 +87,61 @@ def filter(embed: embedModel) -> SearchResults:
     return search_result
 
 
+class embedModel2(BaseModel):
+    embedds: Optional[List[float]] = None
+    images: List[str]
+
+
+@router.post("/post_embeds_ims/")
+def filter(embed: embedModel2) -> SearchResults:
+
+    images = embed.images
+
+    embeddings = []
+
+    # If there is an image query, append the image embeddings to the embeddings list
+    if len(images) > 0:
+
+        # get index of each item
+        # TODO index can be sent in the request instead
+        selected_indexes = [
+            df[df.article_id.isin([image])].index[0] for image in images
+        ]
+
+        # a list of image indexes
+        embeddings.extend(
+            index.reconstruct_batch(selected_indexes)
+        )  # get the embeddings of the selected indexes, append
+        logger.info(np.array(embeddings).shape)
+
+    if len(embed.embedds) > 0:
+        embeddings.extend(np.array(embed.embedds).reshape(1, 512))
+
+    if len(embeddings) > 1:
+
+        # the aggregation strategy is mean
+        embeddings = np.mean(embeddings, axis=0).reshape((1, 512))
+
+        # normalize the query embedding
+        embeddings = embeddings / np.linalg.norm(
+            embeddings, ord=2, axis=-1, keepdims=True
+        )
+
+    # Perform a search
+    k = 100  # number of nearest neighbors
+    # either IDSelectorBatch, or IDSelectorArray for filtered search
+    # D = distances, I = indexes
+    _, I = index.search(np.array(embeddings).astype("float32"), k)
+
+    result = df.iloc[I[0]]
+
+    search_result = SearchResults(
+        items=result[["prod_name", "article_id"]].to_dict(orient="records")
+    )
+
+    return search_result
+
+
 #############################
 
 
