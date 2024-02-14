@@ -57,7 +57,7 @@ class testmodel(BaseModel):
     test_str: str
 
 
-#############################
+############################# DEBUGGING
 @router.post("/test/")
 def filter(test: testmodel):  # -> SearchResults:
     logger.info(test.test_str)
@@ -73,7 +73,7 @@ def filter(embed: embedModel) -> SearchResults:
     embeds = np.array(embed.embedds).reshape(1, 512)
 
     # Perform a search
-    k = 36  # number of nearest neighbors
+    k = 100  # number of nearest neighbors
     # either IDSelectorBatch, or IDSelectorArray for filtered search
     # D = distances, I = indexes
     _, I = index.search(embeds.astype("float32"), k)
@@ -81,9 +81,7 @@ def filter(embed: embedModel) -> SearchResults:
     result = df.iloc[I[0]]
 
     search_result = SearchResults(
-        items=result[["href", "image_src", "prod_name", "article_id"]].to_dict(
-            orient="records"
-        )
+        items=result[["prod_name", "article_id"]].to_dict(orient="records")
     )
 
     return search_result
@@ -121,9 +119,7 @@ def filter(filter_query: FilterQuery):  # -> SearchResults:
         result = df.iloc[index_range[0] : index_range[1]]
 
     filter_result = SearchResults(
-        items=result[["href", "image_src", "prod_name", "article_id"]].to_dict(
-            orient="records"
-        )
+        items=result[["prod_name", "article_id"]].to_dict(orient="records")
     )
     return filter_result
 
@@ -188,9 +184,7 @@ def search(search_query: SearchQuery) -> SearchResults:
     result = df.iloc[I[0]]
 
     search_result = SearchResults(
-        items=result[["href", "image_src", "prod_name", "article_id"]].to_dict(
-            orient="records"
-        )
+        items=result[["prod_name", "article_id"]].to_dict(orient="records")
     )
 
     return search_result
