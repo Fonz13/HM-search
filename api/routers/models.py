@@ -24,7 +24,7 @@ class SearchResultItem(BaseModel):
     article_id: str
 
 
-class SearchResults(BaseModel):
+class SearchResultsModel(BaseModel):
     items: List[SearchResultItem]
 
 

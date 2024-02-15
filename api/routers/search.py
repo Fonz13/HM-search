@@ -2,8 +2,12 @@ import fastapi
 from pydantic import BaseModel
 import pandas as pd
 import faiss
-from typing import List, Optional
-from routers.models import SearchQuery, SearchResultItem, SearchResults, FilterQuery
+from typing import List
+from routers.models import (
+    SearchQuery,
+    SearchResultsModel,
+    FilterQuery,
+)
 import numpy as np
 import gdown
 
@@ -59,7 +63,7 @@ class testmodel(BaseModel):
 
 ############################# DEBUGGING
 @router.post("/test/")
-def filter(test: testmodel):  # -> SearchResults:
+def filter(test: testmodel):  # -> SearchResultsModel:
     logger.info(test.test_str)
     return test.test_str + " worked"
 
@@ -69,7 +73,7 @@ class embedModel(BaseModel):
 
 
 @router.post("/post_embeds/")
-def filter(embed: embedModel) -> SearchResults:
+def filter(embed: embedModel) -> SearchResultsModel:
     embeds = np.array(embed.embedds).reshape(1, 512)
 
     # Perform a search
@@ -80,22 +84,21 @@ def filter(embed: embedModel) -> SearchResults:
 
     result = df.iloc[I[0]]
 
-    search_result = SearchResults(
+    search_result = SearchResultsModel(
         items=result[["prod_name", "article_id"]].to_dict(orient="records")
     )
 
     return search_result
 
 
-class embedModel2(BaseModel):
-    embedds: Optional[List[float]] = None
+class searchModel(BaseModel):
+    text_embedding: List[float]  # Optional[List[float]] = None
     images: List[str]
 
 
-@router.post("/post_embeds_ims/")
-def filter(embed: embedModel2) -> SearchResults:
-
-    images = embed.images
+@router.post("/multi_modal_search/")
+def filter(search_query: searchModel) -> SearchResultsModel:
+    images = search_query.images
 
     embeddings = []
 
@@ -103,7 +106,7 @@ def filter(embed: embedModel2) -> SearchResults:
     if len(images) > 0:
 
         # get index of each item
-        # TODO index can be sent in the request instead
+        # TODO OPTIMIZE: index can be sent in the request instead
         selected_indexes = [
             df[df.article_id.isin([image])].index[0] for image in images
         ]
@@ -112,13 +115,15 @@ def filter(embed: embedModel2) -> SearchResults:
         embeddings.extend(
             index.reconstruct_batch(selected_indexes)
         )  # get the embeddings of the selected indexes, append
-        logger.info(np.array(embeddings).shape)
 
-    if len(embed.embedds) > 0:
-        embeddings.extend(np.array(embed.embedds).reshape(1, 512))
+    # If there is an text embedding, append it to the embeddings list
+    if (
+        len(search_query.text_embedding) > 0
+    ):  # text query is an empty list if not present
+        embeddings.extend(np.array(search_query.text_embedding).reshape(1, 512))
 
+    # If an aggregation is needed, perform it
     if len(embeddings) > 1:
-
         # the aggregation strategy is mean
         embeddings = np.mean(embeddings, axis=0).reshape((1, 512))
 
@@ -135,7 +140,7 @@ def filter(embed: embedModel2) -> SearchResults:
 
     result = df.iloc[I[0]]
 
-    search_result = SearchResults(
+    search_result = SearchResultsModel(
         items=result[["prod_name", "article_id"]].to_dict(orient="records")
     )
 
@@ -146,7 +151,7 @@ def filter(embed: embedModel2) -> SearchResults:
 
 
 @router.post("/filter/")
-def filter(filter_query: FilterQuery):  # -> SearchResults:
+def filter(filter_query: FilterQuery):  # -> SearchResultsModel:
     logger.info("ghjk")
     """
     Filter the data based on the filter query
@@ -154,7 +159,7 @@ def filter(filter_query: FilterQuery):  # -> SearchResults:
     params:
         filter_query: FilterQuery - the filter query
     returns:
-        SearchResults - the filtered results, as a SearchResults object of 36 items
+        SearchResultsModel - the filtered results, as a SearchResultsModel object of 36 items
 
     """
     index_range = (
@@ -173,14 +178,14 @@ def filter(filter_query: FilterQuery):  # -> SearchResults:
         # if there is no filter
         result = df.iloc[index_range[0] : index_range[1]]
 
-    filter_result = SearchResults(
+    filter_result = SearchResultsModel(
         items=result[["prod_name", "article_id"]].to_dict(orient="records")
     )
     return filter_result
 
 
 @router.post("/search/")
-def search(search_query: SearchQuery) -> SearchResults:
+def search(search_query: SearchQuery) -> SearchResultsModel:
 
     # TODO: if image and text query is None, do a filterQuery insted
     if search_query.image_query == "" and search_query.text_query == "":
@@ -238,7 +243,7 @@ def search(search_query: SearchQuery) -> SearchResults:
     # We are only searching for one item, so we get the first list
     result = df.iloc[I[0]]
 
-    search_result = SearchResults(
+    search_result = SearchResultsModel(
         items=result[["prod_name", "article_id"]].to_dict(orient="records")
     )
 

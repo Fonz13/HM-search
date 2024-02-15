@@ -2,16 +2,13 @@ import {
   env,
   AutoTokenizer,
   CLIPTextModelWithProjection,
-  CLIPModel,
 } from "@xenova/transformers";
-import { getCachedFile, getCachedJSON } from "./utils.js";
 import api from "./api";
 
 const EMBED_DIM = 512;
 
 // Skip local model check
 env.allowLocalModels = false;
-env.cacheDir = false;
 
 class ApplicationSingleton {
   static model_id = "ff13/fclip32";
@@ -45,6 +42,10 @@ class ApplicationSingleton {
   }
 }
 
+/**
+ * Call the API to check response
+ * only for debugging
+ */
 function callAPI() {
   api
     .post("/test/", {
@@ -58,7 +59,12 @@ function callAPI() {
       }
     });
 }
-
+/**
+ * Call the API to search for the embeddings
+ * @param {embeddngs} embeddngs
+ * @returns {Promise} Promise object represents the items
+ * only for debugging
+ */
 function EMBEDAPI(embeddngs) {
   return api
     .post("/post_embeds/", {
@@ -73,20 +79,26 @@ function EMBEDAPI(embeddngs) {
     });
 }
 
-function EMBEDIMAMGEAPI(embeddngs, images) {
+/**
+ * Call the API to search for the embeddings
+ * @param {embeddngs} embeddngs
+ * @param {images} images
+ * @returns {Promise} Promise object represents the items
+ */
+function callAPISearch(textEmbedding, imageIDs) {
   return api
-    .post("/post_embeds_ims/", {
-      embedds: Array.from(embeddngs.data),
-      images: images,
+    .post("/multi_modal_search/", {
+      text_embedding: Array.from(textEmbedding.data),
+      images: imageIDs,
     })
     .then((response) => {
-      //console.log(response.data.items);
       return response.data.items;
     })
     .catch((error) => {
       console.log(error);
     });
 }
+
 // Listen for messages from the main thread
 self.addEventListener("message", async (event) => {
   // Get the tokenizer, model, metadata, and embeddings. When called for the first time,
@@ -98,30 +110,32 @@ self.addEventListener("message", async (event) => {
   // Send the output back to the main thread
   self.postMessage({ status: "ready" });
 
-  // Run tokenization
-  const text_inputs = tokenizer(event.data.text, {
-    padding: true,
-    truncation: true,
-  });
+  let text_embeds;
+  if (event.data.text !== "") {
+    // Run tokenization
+    const text_inputs = tokenizer(event.data.text, {
+      padding: true,
+      truncation: true,
+    });
 
-  //callAPI();
+    // Compute embeddings
+    text_embeds = (await text_model(text_inputs)).text_embeds;
+  } else {
+    //if there is no text, send an empty array
+    text_embeds = { data: [] };
+  }
 
-  // Compute embeddings
-  const { text_embeds } = await text_model(text_inputs);
-
-  //const output_api = await EMBEDAPI(text_embeds);
+  //callAPI(); // for debugging
+  //const returnedItems = await EMBEDAPI(text_embeds); / for debugging
 
   // new
-  const images = event.data.selectedImages;
-  const text_query = event.data.text !== "" ? text_embeds : { data: [] };
+  const imageIDs = event.data.selectedImages;
 
-  console.log(images, "images");
-  console.log(text_query, "text_query");
-  const output_api = await EMBEDIMAMGEAPI(text_query, images);
+  const returnedItems = await callAPISearch(text_embeds, imageIDs);
 
   // Send the output back to the main thread
   self.postMessage({
     status: "complete",
-    output: output_api,
+    output: returnedItems,
   });
 });
