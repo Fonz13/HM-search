@@ -4,7 +4,7 @@ import Image from "next/image";
 export function SearchBar({ search, imageBucket, setImageBucket }) {
   return (
     <div className="flex">
-      <div className="flex-auto px-2">
+      <div className="flex-auto pr-2">
         <div className="relative mb-2">
           <form
             onSubmit={(e) => {
@@ -37,20 +37,20 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
               type="search"
               name="text"
               id="default-search"
-              className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full p-4 pl-10 text-sm border focus:outline-none focus:ring-0 rounded-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-white "
               placeholder="Search for images..."
               autoComplete="off"
               required
             />
             <button
               type="submit"
-              className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2 "
             >
               Search by text
             </button>
           </form>
           <div
-            className="grid gap-2 flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-800 rounded-lg"
+            className="grid gap-2 flex items-center justify-between p-2 bg-gray-700 rounded-lg"
             style={{
               //TODO make this responsive
               gridTemplateColumns: "repeat(15, minmax(0, 1fr))",
@@ -71,7 +71,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
               >
                 <Image
                   alt=""
-                  className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-50"
+                  className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-60"
                   style={{
                     transform: "translate3d(0, 0, 0)",
                   }}
@@ -111,7 +111,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
                 //search only by images
                 search("", imageBucket);
               }}
-              className=" absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className=" absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 focus:ring-blue-800"
             >
               Search by Images
             </button>
@@ -132,7 +132,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
               );
             }
           }}
-          className=" text-white h-full bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className=" text-white h-full bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 focus:ring-blue-800"
         >
           Search by Both
         </button>
@@ -143,7 +143,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
             document.getElementById("default-search").value = "";
             setImageBucket([]);
           }}
-          className=" text-white h-full bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+          className=" text-white h-full bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-4 py-2 focus:ring-red-800"
         >
           Clear All
         </button>
