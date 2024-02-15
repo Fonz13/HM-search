@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Modal } from "./components/Modal";
 import { SearchBar } from "./components/SearchBar";
 import { ImageGrid } from "./components/ImageGrid";
-import { LoadIcon } from "./components/LoadIcon";
+import { Header } from "./components/Header";
 
 export default function Home() {
   // Application state
@@ -14,14 +14,13 @@ export default function Home() {
   const [imageBucket, setImageBucket] = useState([]);
   //TODO
   /**
-   * add application state with the id of selected images
-   * more form data for the search funciotn
+   * make search bar stay in place when scrolling
+   * maybe add filters?
    */
 
   // Create a reference to the worker object.
   const worker = useRef(null);
 
-  //callAPI();
   // We use the `useEffect` hook to set up the worker as soon as the `App` component is mounted.
   useEffect(() => {
     if (!worker.current) {
@@ -61,6 +60,7 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-[1960px] p-4 relative">
       <Modal currentImage={currentImage} setCurrentImage={setCurrentImage} />
+      <Header />
       <SearchBar
         search={search}
         imageBucket={imageBucket}
@@ -68,7 +68,11 @@ export default function Home() {
       />
       {ready === false && (
         <div className="z-10 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="text-white text-2xl font-bold">Loading model...</div>
+          <div className="text-white text-2xl font-bold">
+            {
+              //"..Loading"
+            }
+          </div>
         </div>
       )}
       <ImageGrid

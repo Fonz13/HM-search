@@ -3,8 +3,8 @@ import Image from "next/image";
 
 export function SearchBar({ search, imageBucket, setImageBucket }) {
   return (
-    <div className="grid grid-flow-col gap-3">
-      <div className="col-span-4">
+    <div className="flex">
+      <div className="flex-auto px-2">
         <div className="relative mb-2">
           <form
             onSubmit={(e) => {
@@ -44,7 +44,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
             />
             <button
               type="submit"
-              className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Search by text
             </button>
@@ -110,14 +110,14 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
                 //search only by images
                 search("", imageBucket);
               }}
-              className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Search by Images
             </button>
           )}
         </div>
       </div>
-      <div className="col-span-1">
+      <div className="flex-none pb-2 space-x-2">
         <button
           onClick={() => {
             //search by both
@@ -131,9 +131,20 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
               );
             }
           }}
-          className=" text-white top-2.5 right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className=" text-white h-full bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Search by Both
+        </button>
+        <button
+          onClick={() => {
+            //search by both
+
+            document.getElementById("default-search").value = "";
+            setImageBucket([]);
+          }}
+          className=" text-white h-full bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+        >
+          Clear All
         </button>
       </div>
     </div>

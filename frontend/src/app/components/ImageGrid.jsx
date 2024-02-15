@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { blurHashToDataURL } from "../utils.js";
-import { LoadIcon } from "./LoadIcon";
 
 export function ImageGrid({
   images,
