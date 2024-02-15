@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export function SearchBar({ search, imageBucket, setImageBucket }) {
   return (
-    <div className="flex">
+    <nav className="flex">
       <div className="flex-auto pr-2">
         <div className="relative mb-2">
           <form
@@ -148,6 +148,6 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
           Clear All
         </button>
       </div>
-    </div>
+    </nav>
   );
 }

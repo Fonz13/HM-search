@@ -61,11 +61,13 @@ export default function Home() {
     <main className="mx-auto max-w-[1960px] p-4 relative">
       <Modal currentImage={currentImage} setCurrentImage={setCurrentImage} />
       <Header />
+
       <SearchBar
         search={search}
         imageBucket={imageBucket}
         setImageBucket={setImageBucket}
       />
+
       {ready === false && (
         <div className="z-10 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
           <div className="text-white text-2xl font-bold">
