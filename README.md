@@ -37,3 +37,9 @@ When searching using many images or images and text, the embeddings are aggregat
 ### Misc
 
 The frontend is built using [transformers.js/semantic-image-search-client](https://github.com/xenova/transformers.js/tree/main/examples/semantic-image-search-client/) as a foundation.
+
+## TODO:
+
+- add a toggable [sidebar](https://flowbite.com/docs/components/sidebar/) with category filtering (kind of like H&M site)
+- add filter to query in frontend/backend
+-
