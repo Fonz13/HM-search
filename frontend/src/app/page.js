@@ -14,8 +14,7 @@ export default function Home() {
   const [imageBucket, setImageBucket] = useState([]);
   //TODO
   /**
-   * make search bar stay in place when scrolling
-   * maybe add filters?
+   * add filters and sidebar
    */
 
   // Create a reference to the worker object.
