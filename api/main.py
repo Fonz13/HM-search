@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import search
 import requests
-from fastapi_utils.tasks import repeat_every
+
+# from fastapi_utils.tasks import repeat_every
 
 
 # from config import settings

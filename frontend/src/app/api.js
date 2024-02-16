@@ -1,8 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  //baseURL: "http://0.0.0.0:8080/",
-  baseURL: "https://hm-search-api.onrender.com/",
+  baseURL:
+    process.env.NODE_ENV === "development"
+      ? "http://0.0.0.0:8000/" // Development server local
+      : "/api/", // Production serve, serverless function on vercel
 });
 
 export default api;
