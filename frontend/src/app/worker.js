@@ -8,13 +8,11 @@ import api from "./api";
 const EMBED_DIM = 512;
 
 // Skip local model check
-env.allowLocalModels = false;
+env.allowRemoteModels = false;
+env.localModelPath = "/static/";
 
 class ApplicationSingleton {
-  static model_id = "ff13/fclip32";
-  static BASE_URL =
-    "https://huggingface.co/datasets/Xenova/semantic-image-search-assets/resolve/main/";
-
+  static model_id = "fashion-clip"; //"ff13/fclip32";
   static tokenizer = null;
   static text_model = null;
   static metadata = null;
