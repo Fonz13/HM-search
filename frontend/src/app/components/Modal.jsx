@@ -59,7 +59,7 @@ export function Modal({ currentImage, setCurrentImage }) {
               href={product_url}
               className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
               target="_blank"
-              title="View on Unsplash"
+              title="View product"
               rel="noreferrer"
             >
               <svg

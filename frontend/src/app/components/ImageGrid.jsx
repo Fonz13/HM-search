@@ -38,11 +38,35 @@ export function ImageGrid({
             className="after:content group cursor-pointer relative mb-4 block w-full after:pointer-events-none after:absolute after:inset-0 after:rounded-lg "
           >
             {!currentImage && (
-              <div className="absolute top-2  right-2  flex items-center justify-center">
+              <div className="absolute top-2  right-2  left-2 flex items-center justify-between">
+                <a
+                  href={product_url}
+                  className="z-10 rounded-full  bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 active:bg-green-700"
+                  target="_blank"
+                  title="View product"
+                  rel="noreferrer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                    className="h-10 w-10"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                    ></path>
+                  </svg>
+                </a>
                 <button
                   onClick={() =>
                     setImageBucket([...imageBucket, { article_id, image_url }])
                   }
+                  title="Add product to search bar"
                   className="z-10 rounded-full  bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 active:bg-green-700"
                 >
                   <svg
