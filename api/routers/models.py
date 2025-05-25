@@ -2,9 +2,10 @@ from typing import List
 from pydantic import BaseModel
 
 
-class searchModel(BaseModel):
+class SearchModel(BaseModel):
     text_embedding: List[float]  # Optional[List[float]] = None
     images: List[str]  # list of image article_ids
+    category: str | None
 
 
 class SearchResultItem(BaseModel):

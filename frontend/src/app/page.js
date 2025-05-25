@@ -50,9 +50,9 @@ export default function Home() {
       worker.current.removeEventListener("message", onMessageReceived);
   });
 
-  const search = useCallback((text, selectedImages) => {
+  const search = useCallback((text, selectedImages, category) => {
     if (worker.current) {
-      worker.current.postMessage({ text, selectedImages });
+      worker.current.postMessage({ text, selectedImages, category });
     }
   }, []);
 

@@ -1,18 +1,56 @@
 "use client";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 export function SearchBar({ search, imageBucket, setImageBucket }) {
+  const categories = ["All", "Men", "Women", "Kids", "Baby"];
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // Ensure "All" is selected on client-side mount
+  useEffect(() => {
+    setSelectedCategory("All");
+  }, []);
+
   return (
     <nav className="flex">
       <div className="flex-auto pr-2">
         <div className="relative mb-2">
+          <h2 className="text-white text-lg font-semibold mb-2">Categories:</h2>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {categories.map((category) => {
+              const value = category;
+              const isSelected = selectedCategory === value;
+
+              return (
+                <label
+                  key={category}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition 
+          ${
+            isSelected
+              ? "bg-blue-700 text-white hover:bg-blue-800"
+              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+          }`}
+                >
+                  <input
+                    type="radio"
+                    name="category"
+                    value={category}
+                    checked={isSelected}
+                    onChange={() => setSelectedCategory(category)}
+                    className="sr-only"
+                  />
+                  {category}
+                </label>
+              );
+            })}
+          </div>
           <form
             onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.target);
               const text = formData.get("text");
               //search only by text
-              search(text, []);
+              search(text, [], selectedCategory);
             }}
             className="relative mb-2"
           >
@@ -108,7 +146,8 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
                 //search only by images
                 search(
                   "",
-                  imageBucket.map((image) => image.article_id) // list of article_ids
+                  imageBucket.map((image) => image.article_id), // list of article_ids
+                  selectedCategory
                 );
               }}
               className=" absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 focus:ring-blue-800"
@@ -128,7 +167,8 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
             ) {
               search(
                 document.getElementById("default-search").value,
-                imageBucket.map((image) => image.article_id) // list of article_ids
+                imageBucket.map((image) => image.article_id), // list of article_ids
+                selectedCategory
               );
             }
           }}

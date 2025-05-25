@@ -46,11 +46,12 @@ class ApplicationSingleton {
  * @param {images} images
  * @returns {Promise} Promise object represents the items
  */
-function callAPISearch(textEmbedding, imageIDs) {
+function callAPISearch(textEmbedding, imageIDs, category) {
   return api
     .post("/multi_modal_search/", {
       text_embedding: Array.from(textEmbedding.data),
       images: imageIDs,
+      category: category,
     })
     .then((response) => {
       return response.data.items;
@@ -88,8 +89,9 @@ self.addEventListener("message", async (event) => {
 
   // new
   const imageIDs = event.data.selectedImages;
+  const category = event.data.category;
 
-  const returnedItems = await callAPISearch(text_embeds, imageIDs);
+  const returnedItems = await callAPISearch(text_embeds, imageIDs, category);
 
   // Send the output back to the main thread
   self.postMessage({

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import pandas as pd
 import faiss
 from typing import List
-from routers.models import SearchResultsModel, searchModel
+from routers.models import SearchResultsModel, SearchModel
 import numpy as np
 import gdown
 import logging
@@ -30,11 +30,10 @@ except:
 
 
 @router.post("/multi_modal_search/")
-def filter(search_query: searchModel) -> SearchResultsModel:
+def filter(search_query: SearchModel) -> SearchResultsModel:
     images = search_query.images
 
     embeddings = []
-    print(search_query)
 
     # If there is an image query, append the image embeddings to the embeddings list
     if len(images) > 0:
@@ -68,11 +67,21 @@ def filter(search_query: searchModel) -> SearchResultsModel:
     if len(embeddings) < 1:
         print("Bad input")
 
+    # if a specific category has been applied, we filter for it.
+    if search_query.category != "All":
+        # if there is a filter, get the indexes of the filtered data
+        query_string = f"category=='{search_query.category}'"
+        filtered_indexes = list(df.query(query_string).index)  # get the indexes
+
+        params = faiss.SearchParameters(sel=faiss.IDSelectorBatch(filtered_indexes))
+    else:
+        params = None  # no filter
+
     # Perform a search
     k = 100  # number of nearest neighbors
     # either IDSelectorBatch, or IDSelectorArray for filtered search
     # D = distances, I = indexes
-    _, I = index.search(np.array(embeddings).astype("float32"), k)
+    _, I = index.search(np.array(embeddings).astype("float32"), k, params=params)
 
     result = df.iloc[I[0]]
 

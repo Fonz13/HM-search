@@ -2,9 +2,9 @@
 
 export function Header({}) {
   return (
-    <header className=" text-white p-4 flex justify-between items-center">
+    <header className=" text-white py-4 flex justify-between items-center">
       <div>
-        <p className="text-5xl font-bold">Search from over 100k H&M items</p>
+        <p className="text-5xl font-bold">Search for H&M items</p>
       </div>
       <div className="pb-2">
         <a
