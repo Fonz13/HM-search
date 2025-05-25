@@ -163,7 +163,7 @@ cython_debug/
 # misc
 
 *.npy
-*.faiss
+preprocess/*.faiss
 *.pkl
 preprocess/0_scrape_hm/images
 articles.csv
