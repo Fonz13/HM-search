@@ -34,6 +34,7 @@ def filter(search_query: searchModel) -> SearchResultsModel:
     images = search_query.images
 
     embeddings = []
+    print(search_query)
 
     # If there is an image query, append the image embeddings to the embeddings list
     if len(images) > 0:
@@ -64,6 +65,8 @@ def filter(search_query: searchModel) -> SearchResultsModel:
         embeddings = embeddings / np.linalg.norm(
             embeddings, ord=2, axis=-1, keepdims=True
         )
+    if len(embeddings) < 1:
+        print("Bad input")
 
     # Perform a search
     k = 100  # number of nearest neighbors
@@ -74,7 +77,9 @@ def filter(search_query: searchModel) -> SearchResultsModel:
     result = df.iloc[I[0]]
 
     search_result = SearchResultsModel(
-        items=result[["prod_name", "article_id"]].to_dict(orient="records")
+        items=result[
+            ["product_desc", "article_id", "product_url", "image_url"]
+        ].to_dict(orient="records")
     )
 
     return search_result

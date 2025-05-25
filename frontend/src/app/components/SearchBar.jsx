@@ -59,7 +59,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
               "2xl": { gridTemplateColumns: "repeat(5, minmax(0, 1fr))" },
             }}
           >
-            {imageBucket.map((article_id, index) => (
+            {imageBucket.map(({ article_id, image_url }, index) => (
               <div
                 key={article_id + index}
                 onClick={() => {
@@ -75,10 +75,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
                   style={{
                     transform: "translate3d(0, 0, 0)",
                   }}
-                  src={`https://d11p8vtjlacpl4.cloudfront.net/kaggle-hm-images/${article_id.slice(
-                    0,
-                    3
-                  )}/${article_id}.jpg`}
+                  src={image_url}
                   width={480}
                   height={480}
                   unoptimized={true}
@@ -109,7 +106,10 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
             <button
               onClick={() => {
                 //search only by images
-                search("", imageBucket);
+                search(
+                  "",
+                  imageBucket.map((image) => image.article_id) // list of article_ids
+                );
               }}
               className=" absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 focus:ring-blue-800"
             >
@@ -128,7 +128,7 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
             ) {
               search(
                 document.getElementById("default-search").value,
-                imageBucket
+                imageBucket.map((image) => image.article_id) // list of article_ids
               );
             }
           }}
@@ -138,8 +138,6 @@ export function SearchBar({ search, imageBucket, setImageBucket }) {
         </button>
         <button
           onClick={() => {
-            //search by both
-
             document.getElementById("default-search").value = "";
             setImageBucket([]);
           }}

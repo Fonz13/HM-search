@@ -4,12 +4,14 @@ from pydantic import BaseModel
 
 class searchModel(BaseModel):
     text_embedding: List[float]  # Optional[List[float]] = None
-    images: List[str]
+    images: List[str]  # list of image article_ids
 
 
 class SearchResultItem(BaseModel):
-    prod_name: str
+    product_desc: str
     article_id: str
+    product_url: str
+    image_url: str
 
 
 class SearchResultsModel(BaseModel):
