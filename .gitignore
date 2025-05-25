@@ -164,8 +164,10 @@ cython_debug/
 
 *.npy
 *.faiss
-h-and-m-personalized-fashion-recommendations/
+*.pkl
+preprocess/0_scrape_hm/images
 articles.csv
+original_articles.csv
 .DS_Store
 
 # quantized models in preprocess/4_qunatization
