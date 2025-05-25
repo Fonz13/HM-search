@@ -41,43 +41,6 @@ class ApplicationSingleton {
 }
 
 /**
- * Call the API to check response
- * only for debugging
- */
-function callAPI() {
-  api
-    .post("/test/", {
-      test_str: "testing",
-    })
-    .then((response) => {
-      if (response.statusText == "OK") {
-        console.log(response.data);
-      } else {
-        console.log("error");
-      }
-    });
-}
-/**
- * Call the API to search for the embeddings
- * @param {embeddngs} embeddngs
- * @returns {Promise} Promise object represents the items
- * only for debugging
- */
-function EMBEDAPI(embeddngs) {
-  return api
-    .post("/post_embeds/", {
-      embedds: Array.from(embeddngs.data),
-    })
-    .then((response) => {
-      //console.log(response.data.items);
-      return response.data.items;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-/**
  * Call the API to search for the embeddings
  * @param {embeddngs} embeddngs
  * @param {images} images
@@ -122,9 +85,6 @@ self.addEventListener("message", async (event) => {
     //if there is no text, send an empty array
     text_embeds = { data: [] };
   }
-
-  //callAPI(); // for debugging
-  //const returnedItems = await EMBEDAPI(text_embeds); / for debugging
 
   // new
   const imageIDs = event.data.selectedImages;

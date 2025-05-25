@@ -8,15 +8,8 @@ export function Modal({ currentImage, setCurrentImage }) {
   // add blurhash
   // display product name
 
-  const photo_url = currentImage
-    ? `https://www2.hm.com/en_gb/productpage.${currentImage.article_id}.html`
-    : null;
-  const photo_image_url = currentImage
-    ? `https://d11p8vtjlacpl4.cloudfront.net/kaggle-hm-images/${currentImage.article_id.slice(
-        0,
-        3
-      )}/${currentImage.article_id}.jpg`
-    : null;
+  const product_url = currentImage ? currentImage.product_url : null;
+  const photo_image_url = currentImage ? currentImage.image_url : null;
   return (
     <div
       className="fixed inset-0 z-30 backdrop-blur-2xl w-full h-full bg-black top-0 left-0 transition"
@@ -63,7 +56,7 @@ export function Modal({ currentImage, setCurrentImage }) {
           </div>
           <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
             <a
-              href={photo_url}
+              href={product_url}
               className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
               target="_blank"
               title="View on Unsplash"
